@@ -1,10 +1,17 @@
 import {Config, Context, Effect, Layer, Secret} from 'effect';
+import readline from "node:readline";
 import {Api, TelegramClient} from 'telegram';
 import {StringSession} from 'telegram/sessions';
 import RequestWebView = Api.messages.RequestWebView;
 import StartBot = Api.messages.StartBot;
 import GetHistory = Api.messages.GetHistory;
 import JoinChannel = Api.channels.JoinChannel;
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    prompt: 'TELEGRAM> ',
+});
 
 const acquire = Effect.gen(function* () {
     const app = yield* Config.number('TG_API_ID');
@@ -16,7 +23,12 @@ const acquire = Effect.gen(function* () {
         connectionRetries: 3,
     });
 
-    yield* Effect.tryPromise(() => client.connect());
+    yield* Effect.tryPromise(() => client.start({
+        phoneNumber: () => new Promise(resolve => rl.question(`=> Enter number:`, resolve)),
+        phoneCode: () => new Promise(resolve => rl.question(`=> Enter code:`, resolve)),
+        password: () => new Promise(resolve => rl.question(`=> Enter 2fa:`, resolve)),
+        onError: (err) => console.error(err.message),
+    }));
 
     const me: Api.User = yield* Effect.promise(() => client.getMe());
     yield* Effect.annotateLogsScoped({phone: me.phone, username: me.username, premium: me.premium})
