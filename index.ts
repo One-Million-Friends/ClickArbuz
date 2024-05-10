@@ -3,7 +3,7 @@ import {ConfigProvider, Effect, pipe, Schedule} from "effect";
 import {constVoid} from "effect/Function"
 import {getClickHash} from "./game/hash.ts";
 import {Telegram} from "./telegram/client.ts";
-import {click, getProfile} from "./game/api.ts";
+import {click, getActiveBoosts, getAllBoosts, getProfile} from "./game/api.ts";
 
 const fmt = new Intl.NumberFormat("ru-RU").format;
 
