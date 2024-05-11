@@ -23,12 +23,12 @@ const miner = Effect.gen(function* (_) {
     }
 
     let profile = yield* getProfile(tgWebAppData)
-
-    console.log("🤠PROFILE:", profile.fullName, "💎", fmt(profile.clicks))
-
     if (profile.banned) {
+        console.log("🛑BANNED!!!")
         return Effect.none;
     }
+
+    console.log("🤠PROFILE:", profile.fullName, "💎", fmt(profile.clicks))
 
     let energy = Math.ceil(profile.energy)
     let lastClickSeconds = profile.lastClickSeconds
@@ -37,8 +37,7 @@ const miner = Effect.gen(function* (_) {
         console.log("⏳CLICKING...")
 
         const hash = yield* Effect.promise(() => getClickHash(profile.id, lastClickSeconds))
-
-        const result = yield* click(tgWebAppData, 200, hash)
+        const result = yield* click(tgWebAppData, 39, hash)
 
         energy = Math.ceil(result.currentEnergy)
         lastClickSeconds = result.lastClickSeconds
@@ -46,7 +45,7 @@ const miner = Effect.gen(function* (_) {
         console.log("🔋ENERGY:", fmt(energy))
         console.log("✅CLICKED:", fmt(result.count))
 
-        yield* Effect.sleep("10 seconds")
+        yield* Effect.sleep("1 seconds")
     }
 
     profile = yield* getProfile(tgWebAppData)
