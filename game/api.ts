@@ -116,6 +116,12 @@ export const upgradeBoost = (tgWebAppData: string, boostId: number) => Http.requ
     Effect.scoped,
 )
 
+export const activateReceipt = (tgWebAppData: string, receipt: string) => Http.request.get(`https://arbuz.betty.games/api/receipts/activate/${receipt}`).pipe(
+    Http.request.setHeader("X-Telegram-Init-Data", tgWebAppData),
+    Http.client.fetch,
+    Effect.scoped,
+)
+
 export const click = (tgWebAppData: string, count: number, hash: string) => Http.request.post("https://arbuz.betty.games/api/click/apply").pipe(
     Http.request.setHeader("Content-Type", "application/json"),
     Http.request.setHeader("X-Telegram-Init-Data", tgWebAppData),
@@ -123,7 +129,7 @@ export const click = (tgWebAppData: string, count: number, hash: string) => Http
         "count": count,
         "hash": hash
     }),
-    Effect.andThen(Http.client.fetchOk),
+    Effect.andThen(Http.client.fetch),
     Effect.andThen(Http.response.schemaBodyJson(Click)),
     Effect.scoped,
 )

@@ -55,7 +55,7 @@ const acquire = Effect.gen(function* () {
         return Effect.promise(() => client.invoke(new StartBot(args)));
     }
 
-    function history(args: Pick<GetHistory, | 'peer' | 'offsetDate' | 'limit' | 'hash'>) {
+    function history(args: Pick<GetHistory, | 'peer' | 'offsetId' | 'offsetDate' | 'limit' | 'addOffset' | 'hash'>) {
         return Effect.promise(() => client.invoke(new GetHistory(args)));
     }
 
